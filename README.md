@@ -18,9 +18,6 @@ Here is a visual journey through our methodology and results.
 At the heart of the model is a dual-stream architecture. We fuse 64-dimensional trainable drug embeddings with genomic features using a **Cross-Attention** mechanism. This allows the model to dynamically ask: *"Given this specific drug structure, which patient genomic features are most relevant?"* The fused representation is then processed in parallel by a **Transformer Encoder** (for global context) and a **Bidirectional LSTM** (for sequential feature dynamics).
 
 *(High-level conceptual overview)*
-<p align="center">
-  <img src="results/plots/dl_sample.jpg" alt="Deep Learning Architecture Sample" width="80%">
-</p>
 
 ### 2. Robust Training & Scaffold-Blind Evaluation
 To prove our model doesn't just memorize data, we enforce a strict **Murcko Scaffold-blind split**. The model is tested on drug chemical backbones it has never seen during training. Despite this immense challenge, our dual-stream architecture ensures stable, rapid convergence without exploding gradients.
