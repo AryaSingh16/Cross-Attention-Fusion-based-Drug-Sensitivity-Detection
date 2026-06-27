@@ -23,7 +23,7 @@
 > **The Core Innovation:** Abandoning simple flat-vector concatenation in favor of dynamic sequence-to-sequence fusion.
 
 <div align="center">
-  <img src="docs/paper_figures/architecture_proposed.png" alt="Proposed Cross-Attention Drug-Genomic Fusion Architecture" width="100%">
+  <img src="docs/paper_figures/architecture_real.png" alt="Proposed Cross-Attention Drug-Genomic Fusion Architecture" width="100%">
   <br>
   <em><small><b>Figure 1:</b> The Proposed Cross-Attention Drug-Genomic Fusion Architecture.</small></em>
 </div>
