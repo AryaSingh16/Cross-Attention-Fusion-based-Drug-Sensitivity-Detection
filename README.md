@@ -49,11 +49,11 @@ The biologically correct inductive bias is a *cross-modal attention* mechanism: 
 
 Formally, for a patient genome tokenized as $G = (g_1, \ldots, g_L) \in \mathbb{R}^{L \times d}$ and a drug graph $D$ with embedding $e_D \in \mathbb{R}^d$, we seek a function:
 
-$$\hat{y} = f_{\theta}\!\left(\operatorname{CrossAttn}(Q = G,\; K = e_D,\; V = e_D)\right)$$
+$$\hat{y} = f_{\theta}\!\left(\text{CrossAttn}(Q = G,\; K = e_D,\; V = e_D)\right)$$
 
 where the attention score for the $i$-th genomic token is:
 
-$$\alpha_i = \operatorname{softmax}\!\left(\frac{Q_i K^\top}{\sqrt{d_k}}\right)$$
+$$\alpha_i = \text{softmax}\!\left(\frac{Q_i K^\top}{\sqrt{d_k}}\right)$$
 
 This scalar $\alpha_i$ is not merely a weighting coefficient. It encodes the **drug-structure-conditioned biological importance** of mutation $i$ — a learnable, context-sensitive attribution score that generalizes across all 470,467 training interactions.
 
@@ -237,7 +237,7 @@ The three key design decisions and their biological justification:
 
 The cross-attention layer is the core contribution of this work. The equation governing each genomic token's transformation is:
 
-$$Z_i = \operatorname{softmax}\!\left(\frac{W_Q g_i \cdot (W_K e_D)^\top}{\sqrt{d_k}}\right)(W_V e_D) + g_i$$
+$$Z_i = \text{softmax}\!\left(\frac{W_Q g_i \cdot (W_K e_D)^\top}{\sqrt{d_k}}\right)(W_V e_D) + g_i$$
 
 where $W_Q, W_K, W_V \in \mathbb{R}^{d \times d_k}$ are learned projection matrices, $g_i$ is the $i$-th genomic token embedding, and $e_D$ is the drug graph embedding. The residual connection $+g_i$ stabilizes gradient flow.
 
