@@ -1,31 +1,15 @@
-<div align="center">
+# Cross-Attention Fusion Framework: Genomic & Chemical Representations for Drug Sensitivity
 
-<h1>
-  <span style="font-size:1.5em; font-weight:800; background: -webkit-linear-gradient(#00C9FF, #92FE9D); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-    Cross-Attention Fusion Framework
-  </span>
-  <br>
-  Genomic & Chemical Representations for Drug Sensitivity
-</h1>
+*A state-of-the-art precision oncology framework scaling pharmacogenomics via dynamic cross-attention*
 
-<p align="center">
-  <i>A state-of-the-art precision oncology framework scaling pharmacogenomics via dynamic cross-attention</i>
-</p>
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Dataset: GDSC](https://img.shields.io/badge/Dataset-GDSC1%2F2-4A90D9?style=for-the-badge)](https://www.cancerrxgene.org/)
+![R2=0.9962](https://img.shields.io/badge/R²_Accuracy-0.9962-brightgreen?style=for-the-badge)
+![Active Research](https://img.shields.io/badge/Status-Active_Research-success?style=for-the-badge)
+[![Stars](https://img.shields.io/github/stars/Panchadip-128/Cross-Attention-Fusion-based-Drug-Sensitivity-Detection?style=for-the-badge&color=yellow)](https://github.com/Panchadip-128/Cross-Attention-Fusion-based-Drug-Sensitivity-Detection/stargazers)
 
-<p align="center">
-  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License: MIT"></a>
-  <a href="https://www.cancerrxgene.org/"><img src="https://img.shields.io/badge/Dataset-GDSC1%2F2-4A90D9?style=for-the-badge" alt="Dataset: GDSC"></a>
-  <img src="https://img.shields.io/badge/R²_Accuracy-0.9962-brightgreen?style=for-the-badge" alt="R2=0.9962">
-  <img src="https://img.shields.io/badge/Status-Active_Research-success?style=for-the-badge" alt="Active Research">
-  <a href="https://github.com/Panchadip-128/Cross-Attention-Fusion-based-Drug-Sensitivity-Detection/stargazers"><img src="https://img.shields.io/github/stars/Panchadip-128/Cross-Attention-Fusion-based-Drug-Sensitivity-Detection?style=for-the-badge&color=yellow" alt="Stars"></a>
-</p>
-
-<h3>
-  🔬 <a href="docs/ARCHITECTURE.md"><strong>Explore the 8-Part Systems Architecture & Flowcharts</strong></a> 🔬
-</h3>
-
-</div>
+### 🔬 **[Explore the 8-Part Systems Architecture & Flowcharts](docs/ARCHITECTURE.md)** 🔬
 
 ---
 
@@ -112,21 +96,21 @@ All empirical evaluations are conducted under strict non-overlapping scaffold co
 | Evaluation on the hold-out test set under Murcko Scaffold splitting |
 | :---: |
 | ![Scaffold-Blind Test Evaluation](docs/assets/scaffold_blind_test.png) |
-| <sup><b>Figure 1:</b> The model achieves an exceptional $R^2 = 0.9962$. The residual distribution (right) is perfectly zero-centered with negligible long-tail variance.</sup> |
+| **Figure 1:** The model achieves an exceptional $R^2 = 0.9962$. The residual distribution (right) is perfectly zero-centered with negligible long-tail variance. |
 
 ### Model Comparison & Trajectory Alignment
 
 | Prediction Density by Model | Binned Effect Size vs Actual IC50 |
 | :---: | :---: |
 | ![Prediction Density by Model](docs/assets/prediction_density.png) | ![Binned Effect Size vs Actual IC50](docs/assets/binned_effect_size.png) |
-| <sup><b>Figure 2:</b> Kernel density estimates comparing our Cross-Attention Fusion against baseline MLPs, standalone BiLSTMs, and Transformers.</sup> | <sup><b>Figure 3:</b> Binned effect size alignment demonstrating that our architecture best tracks ground-truth clinical thresholds.</sup> |
+| **Figure 2:** Kernel density estimates comparing our Cross-Attention Fusion against baseline MLPs, standalone BiLSTMs, and Transformers. | **Figure 3:** Binned effect size alignment demonstrating that our architecture best tracks ground-truth clinical thresholds. |
 
 ### K-Fold Cross-Validation & Uncertainty
 
 | Fold-wise R² Heatmap | MC Dropout Uncertainty Quantification |
 | :---: | :---: |
 | ![Fold-wise R² Heatmap](docs/assets/fold_wise_r2.png) | ![MC Dropout Uncertainty Quantification](docs/assets/mc_dropout_uncertainty.png) |
-| <sup><b>Figure 4:</b> 3-Fold Cross-Validation showing variance $< 0.001$.</sup> | <sup><b>Figure 5:</b> 50-pass Monte Carlo Dropout simulation explicitly bounding predictive variance limits.</sup> |
+| **Figure 4:** 3-Fold Cross-Validation showing variance $< 0.001$. | **Figure 5:** 50-pass Monte Carlo Dropout simulation explicitly bounding predictive variance limits. |
 
 ---
 
@@ -137,7 +121,7 @@ Deep neural models in oncology must provide actionable, interpretable reasoning 
 | SHAP Global Importance Beeswarm | LIME Local Explanation |
 | :---: | :---: |
 | ![SHAP Global Importance Beeswarm](docs/assets/shap_beeswarm.png) | ![LIME Local Explanation](docs/assets/lime_comparison.png) |
-| <sup><b>Left (Global SHAP):</b> Global feature attribution over the validation set, isolating the specific genomic mutations driving global drug resistance.</sup> | <sup><b>Right (Local LIME):</b> Patient-specific surrogate explanations validating that the Cross-Attention layer has correctly conditioned on the patient's unique multi-omics profile.</sup> |
+| **Left (Global SHAP):** Global feature attribution over the validation set, isolating the specific genomic mutations driving global drug resistance. | **Right (Local LIME):** Patient-specific surrogate explanations validating that the Cross-Attention layer has correctly conditioned on the patient's unique multi-omics profile. |
 
 ---
 
@@ -216,7 +200,5 @@ If you use this work in your research, please cite our paper:
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
 
-<div align="center">
-  <i>Maintained with ❤️ for the open-source precision oncology community.</i>
-</div>
+*Maintained with ❤️ for the open-source precision oncology community.*
 
