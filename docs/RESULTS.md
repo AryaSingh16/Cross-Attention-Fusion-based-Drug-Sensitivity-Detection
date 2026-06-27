@@ -5,7 +5,7 @@ This document provides a deep dive into the diagnostic and explainability metric
 ## 1. Training Convergence & Generalization
 
 <p align="center">
-  <img src="../results/plots/training_curves.png" alt="Training Convergence" width="100%">
+  <img src="../results/plots/02_gnn_transformer_training/gnn_transformer_training_018.png" alt="Training Convergence" width="100%">
 </p>
 
 The model was evaluated using Murcko Scaffold-blind splitting, meaning the validation set contained chemical structures never seen during training. Despite this rigorous constraint, the dual-stream architecture ensures smooth optimization. 
@@ -15,7 +15,7 @@ The model was evaluated using Murcko Scaffold-blind splitting, meaning the valid
 ## 2. Epistemic Uncertainty Quantification (MC Dropout)
 
 <p align="center">
-  <img src="../results/plots/uncertainty_plots.png" alt="Uncertainty Quantification" width="100%">
+  <img src="../results/plots/04_uncertainty_quantification/uncertainty_quantification_045.png" alt="Uncertainty Quantification" width="100%">
 </p>
 
 By utilizing Monte Carlo (MC) Dropout (50 passes) during inference, we estimate the epistemic uncertainty (σ) for every prediction.
@@ -25,8 +25,8 @@ By utilizing Monte Carlo (MC) Dropout (50 passes) during inference, we estimate 
 ## 3. Global Explainability via SHAP
 
 <p align="center">
-  <img src="../results/plots/shap_bar.png" alt="SHAP Global Importance" width="45%">
-  <img src="../results/plots/shap_beeswarm.png" alt="SHAP Beeswarm" width="45%">
+  <img src="../results/plots/03_shap_lime_analysis/shap_lime_analysis_001.png" alt="SHAP Global Importance" width="45%">
+  <img src="../results/plots/03_shap_lime_analysis/shap_lime_analysis_002.png" alt="SHAP Beeswarm" width="45%">
 </p>
 
 SHapley Additive exPlanations (SHAP) elucidates the biological drivers of drug sensitivity.
@@ -36,13 +36,13 @@ SHapley Additive exPlanations (SHAP) elucidates the biological drivers of drug s
 ## 4. Patient-Level Interpretability via LIME & SHAP
 
 <p align="center">
-  <img src="../results/plots/shap_waterfall.png" alt="SHAP Waterfall" width="70%">
+  <img src="../results/plots/03_shap_lime_analysis/shap_lime_analysis_000.png" alt="SHAP Waterfall" width="70%">
 </p>
 
-- **SHAP Waterfall (Sample 0):** Traces exactly how the prediction shifts from the expected baseline (0.253) to the final prediction (0.263), quantifying how much `Tissue Type` (+0.05) and `Feature Name` (-0.05) contributed to that specific patient's shift.
+- **SHAP Waterfall (Representative Clinical Case):** Traces exactly how the prediction shifts from the expected baseline (0.253) to the final prediction (0.263), quantifying how much `Tissue Type` (+0.05) and `Feature Name` (-0.05) contributed to that specific patient's shift.
 
 <p align="center">
-  <img src="../results/plots/lime_comparison.png" alt="LIME Comparison" width="100%">
+  <img src="../results/plots/03_shap_lime_analysis/shap_lime_analysis_044.png" alt="LIME Comparison" width="100%">
 </p>
 
 - **LIME Local Explanations:** Validates non-linear feature interactions at an individual level. The comparison across test samples demonstrates that the relative importance of specific tissue types and drug names dynamically shifts for every unique patient, proving the Cross-Attention mechanism is actively adapting to the input.
