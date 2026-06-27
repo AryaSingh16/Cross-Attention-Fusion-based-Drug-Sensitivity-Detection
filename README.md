@@ -4,66 +4,78 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=flat&logo=PyTorch&logoColor=white)](https://pytorch.org/)
 
-This repository contains the official implementation of the paper **"Cross-Attention Fusion of Genomic and Chemical Representations for Robust Drug Sensitivity Prediction"**. It provides an advanced, uncertainty-aware Deep Learning framework for predicting anticancer drug sensitivity ($IC_{50}$) using pharmacogenomic data from the Genomics of Drug Sensitivity in Cancer (GDSC) databases.
+Official PyTorch implementation of the paper **"Cross-Attention Fusion of Genomic and Chemical Representations for Robust Drug Sensitivity Prediction"**.
+
+This repository provides a comprehensive, uncertainty-aware Deep Learning framework designed for robust prediction of anticancer drug sensitivity ($IC_{50}$). The model leverages pharmacogenomic data from the Genomics of Drug Sensitivity in Cancer (GDSC) databases, offering a novel architectural approach to handling highly complex, non-linear interactions between tumor genomics and chemical structures.
 
 ---
 
-## 📖 The Story of the Model
+## 📌 Abstract
 
-Predicting how a specific tumor will respond to a novel drug requires understanding the complex, non-linear interactions between **genomic mutations** and **chemical structures**. Traditional models often memorize chemical similarities and fail when presented with entirely new drug scaffolds. Our framework solves this by dynamically conditioning genomic data on drug identity through a novel Cross-Attention mechanism, while also providing deep explainability and uncertainty quantification for clinical trust.
+Predicting the clinical efficacy of anti-cancer compounds remains a significant challenge due to the immense heterogeneity of tumor genomics and the vastness of chemical space. Traditional computational models frequently suffer from overfitting to chemical similarities, failing to generalize to novel molecular structures (out-of-distribution scaffolds). 
 
-Here is a visual journey through our methodology and results.
+We propose the **Cross-Attention Drug-Genomic Fusion Model**, an architecture that directly mitigates these limitations through:
+1. **Dynamic Cross-Attention:** Explicitly conditioning genomic mutation and expression profiles on drug identity embeddings to learn patient-specific, drug-dependent response mechanisms.
+2. **Dual-Stream Processing:** Capturing global context via a multi-head **Transformer Encoder** and localized sequence dynamics via a **Bidirectional LSTM (BiLSTM)**.
+3. **Rigorous Generalization:** Enforcing strict out-of-distribution evaluation through **Murcko Scaffold-blind splitting**.
+4. **Epistemic Uncertainty Quantification:** Utilizing Monte Carlo (MC) Dropout to estimate predictive confidence bounds, ensuring reliability for clinical application.
 
-### 1. The Architecture: Fusing Genomics and Chemistry
-At the heart of the model is a dual-stream architecture. We fuse 64-dimensional trainable drug embeddings with genomic features using a **Cross-Attention** mechanism. This allows the model to dynamically ask: *"Given this specific drug structure, which patient genomic features are most relevant?"* The fused representation is then processed in parallel by a **Transformer Encoder** (for global context) and a **Bidirectional LSTM** (for sequential feature dynamics).
+---
 
-*(High-level conceptual overview)*
+## 🧠 Model Architecture
 
-### 2. Robust Training & Scaffold-Blind Evaluation
-To prove our model doesn't just memorize data, we enforce a strict **Murcko Scaffold-blind split**. The model is tested on drug chemical backbones it has never seen during training. Despite this immense challenge, our dual-stream architecture ensures stable, rapid convergence without exploding gradients.
+The proposed architecture effectively integrates heterogeneous biological and chemical data modalities:
+
+- **Drug Embeddings:** Trainable $d$-dimensional representations capturing the chemical identity of the compounds.
+- **Positional Encoding:** Standard sinusoidal encodings injected into genomic feature vectors to preserve positional dynamics.
+- **Cross-Attention Fusion:** Genomic features serve as *queries* ($Q$), while the drug embedding projects into *keys* ($K$) and *values* ($V$). This mechanism modulates the genomic sequence representation dynamically based on the specific drug being evaluated.
+- **Parallel Feature Extraction:** The fused representations are processed simultaneously by a Transformer Encoder (self-attention for global dependencies) and a BiLSTM (for bidirectional sequential context).
+- **Attention Pooling:** A learnable weighted aggregation mechanism over the sequence dimension, identifying and up-weighting the most informative features before the final regression head.
+
+---
+
+## 📊 Experimental Results & Interpretability
+
+Our framework not only achieves state-of-the-art predictive accuracy on unseen chemical scaffolds but also emphasizes model transparency and interpretability—crucial prerequisites for computational biology.
+
+### Training Convergence and Generalization
+The dual-stream architecture ensures smooth optimization without gradient explosion, demonstrating robust generalization to out-of-distribution chemical scaffolds (evaluated on the validation split).
 
 <p align="center">
-  <img src="results/plots/training_curves.png" alt="Training Curves" width="80%">
+  <img src="results/plots/training_curves.png" alt="Training Convergence" width="80%">
 </p>
-*The training curves demonstrate strong convergence in validation MSE, MAE, and R², proving the model's ability to generalize to novel chemical scaffolds.*
 
-### 3. Trust Through Uncertainty Quantification
-In clinical settings, knowing when a model is *unsure* is just as important as the prediction itself. By keeping Monte Carlo (MC) Dropout active during inference, our framework generates a distribution of predictions, allowing us to quantify **epistemic uncertainty**. 
+### Epistemic Uncertainty Quantification (MC Dropout)
+By retaining stochastic dropout during inference, the model generates empirical distributions for each prediction. This allows for the estimation of confidence intervals (red bounds). High predictive variance strongly correlates with structurally novel, out-of-distribution compounds.
 
 <p align="center">
   <img src="results/plots/uncertainty_plots.png" alt="Uncertainty Quantification" width="80%">
 </p>
-*The uncertainty bounds (red shaded regions) highlight where the model has high confidence versus where predictions on out-of-distribution drugs exhibit high variance.*
 
-### 4. Global Explainability with SHAP
-Black-box models are dangerous in healthcare. We utilize SHapley Additive exPlanations (SHAP) to open the black box and understand the global drivers of drug sensitivity.
+### Global Feature Importance via SHAP
+To elucidate the biological drivers of drug sensitivity, we apply SHapley Additive exPlanations (SHAP). The analysis identifies key genomic markers whose presence systematically drives IC$_{50}$ predictions higher (conferring resistance) or lower (conferring sensitivity).
 
-**What features matter most globally?**
 <p align="center">
-  <img src="results/plots/shap_bar.png" alt="SHAP Bar Plot" width="45%">
-  <img src="results/plots/shap_beeswarm.png" alt="SHAP Beeswarm Plot" width="45%">
+  <img src="results/plots/shap_bar.png" alt="SHAP Global Importance" width="45%">
+  <img src="results/plots/shap_beeswarm.png" alt="SHAP Beeswarm" width="45%">
 </p>
-*The Bar plot (left) identifies the absolute most critical genomic markers, while the Beeswarm plot (right) shows how the magnitude of those features directly pushes the IC50 prediction higher (resistance) or lower (sensitivity).*
 
-### 5. Patient-Level Local Explainability
-While global trends are useful, doctors need to know *why* a specific prediction was made for a specific patient. We utilize both SHAP Waterfall plots and LIME (Local Interpretable Model-agnostic Explanations) to validate individual predictions.
+### Local Patient-Level Interpretability via LIME & SHAP
+Beyond global trends, clinical utility demands patient-level explanations. Local Interpretable Model-agnostic Explanations (LIME) and SHAP Waterfall plots validate that the model's internal decision logic relies on biologically sound, non-linear feature interactions at an individual patient level.
 
 <p align="center">
   <img src="results/plots/shap_waterfall.png" alt="SHAP Waterfall" width="80%">
 </p>
-*The SHAP Waterfall plot traces the exact path from the baseline expected drug response to the specific patient's predicted response, quantifying exactly how much each mutation or tissue type contributed to the shift.*
-
 <p align="center">
   <img src="results/plots/lime_comparison.png" alt="LIME Comparison" width="45%">
   <img src="results/plots/lime_sample0.png" alt="LIME Sample" width="45%">
 </p>
-*LIME validates these non-linear feature interactions at a highly localized level, ensuring that the model's internal logic aligns with known biological mechanisms of drug resistance.*
 
 ---
 
-## 🚀 Installation & Usage
+## 🚀 Installation & Setup
 
-Clone the repository and install dependencies:
+Clone the repository and install the required dependencies. We recommend using a virtual environment (e.g., `conda` or `venv`).
 
 ```bash
 git clone https://github.com/Panchadip-128/Cross-Attention-Fusion-based-Drug-Sensitivity-Detection.git
@@ -71,15 +83,24 @@ cd Cross-Attention-Fusion-based-Drug-Sensitivity-Detection
 pip install -r requirements.txt
 ```
 
-### 1. Training the Model
-Ensure `GDSC1.csv` and `GDSC2.csv` are in the root directory. To train the model using the Murcko scaffold-blind split with early stopping:
+---
+
+## 💻 Usage
+
+### 1. Data Preparation
+The model relies on the GDSC1 and GDSC2 datasets. Ensure the `GDSC1.csv` and `GDSC2.csv` data files are placed in the root directory (or specify their paths via command-line arguments).
+
+### 2. Model Training
+To train the model using the Murcko scaffold-blind splitting methodology with Early Stopping:
 
 ```bash
 python scripts/train.py --epochs 200 --batch_size 8192 --lr 1e-3
 ```
 
-### 2. Evaluating and Quantifying Uncertainty
-To evaluate the best saved model and generate MC Dropout uncertainty bounds on the test set:
+*Note: The script automatically detects CUDA availability and configures PyTorch's Scaled Dot-Product Attention (SDPA) backend for optimal mathematical stability and performance.*
+
+### 3. Evaluation and Uncertainty Estimation
+To evaluate the optimal saved model and execute Monte Carlo Dropout for uncertainty bounds on the test set:
 
 ```bash
 python scripts/evaluate.py --model_path results/best_model.pth
@@ -89,11 +110,37 @@ python scripts/evaluate.py --model_path results/best_model.pth
 
 ## 📂 Repository Structure
 
-- **`docs/`**: LaTeX Template and Mathematical Theorems (PDF/DOCX).
-- **`notebooks/`**: Original interactive Exploratory & Training Jupyter Notebooks.
-- **`results/plots/`**: The visual storytelling assets shown above.
-- **`scripts/`**: CLI Scripts for training and evaluation.
-- **`src/`**: Core Python Package containing data loaders, graph builders, cross-attention models, and training loops.
+```text
+├── docs/                  # Original Mathematical Theorems and Documentation (PDF/DOCX)
+├── notebooks/             # Exploratory Data Analysis and Training Jupyter Notebooks
+├── results/               
+│   └── plots/             # Diagnostic plots, SHAP, LIME, and Uncertainty visualizations
+├── scripts/               # Command-Line Interfaces (CLI) for training and evaluation
+│   ├── train.py
+│   └── evaluate.py
+├── src/                   # Core Python Package
+│   ├── data/              # Data ingestion, preprocessing, and RDKit Murcko Scaffold splitting
+│   ├── models/            # Architectural components (Cross-Attention, BiLSTM, Transformer)
+│   ├── training/          # AdamW optimization, Cosine Annealing, and MC Dropout evaluation
+│   └── utils/             # Deterministic seed locking and visualization utilities
+├── requirements.txt       # Package dependencies
+└── README.md
+```
+
+---
+
+## 📜 Citation
+
+If you find this code or our methodology useful in your research, please consider citing our work:
+
+```bibtex
+@article{panchadip2026crossattention,
+  title={Cross-Attention Fusion of Genomic and Chemical Representations for Robust Drug Sensitivity Prediction},
+  author={Panchadip},
+  journal={IEEE Access},
+  year={2026}
+}
+```
 
 ---
 
