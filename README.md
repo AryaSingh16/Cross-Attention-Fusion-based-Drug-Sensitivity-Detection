@@ -65,8 +65,6 @@ This scalar $\alpha_i$ is not merely a weighting coefficient. It encodes the **d
 
 ### 2.1. Data Sources & Curation Pipeline
 
-### 2.1. Data Sources & Curation Pipeline
-
 The pharmacogenomic dataset used in this work was obtained from the **Genomics of Drug Sensitivity in Cancer (GDSC)** project through the original [**CancerRxGene**](https://www.cancerrxgene.org/) portal, which accompanied the GDSC1000 resource introduced by **Iorio *et al.* (2016)**. The dataset consists of **ANOVA-derived biomarker association statistics** describing relationships between genomic features and anticancer drug response, including drug annotations, molecular targets, target pathways, IC50 effect-size estimates, statistical significance measures, tissue-specific association statistics, microsatellite instability (MSI) significance, and false discovery rate (FDR) values.
 
 The GDSC project is currently maintained as part of the [**Cancer Dependency Map at the Wellcome Sanger Institute**](https://depmap.sanger.ac.uk/documentation/datasets/drug-sensitivity/), where updated drug sensitivity resources, documentation, and subsequent GDSC releases are publicly distributed:
